@@ -1,4 +1,81 @@
 {
+    "api-platform/symfony": {
+        "version": "3.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "3.3",
+            "ref": "74b45ac570c57eb1fbe56c984091a9ff87e18bab"
+        },
+        "files": [
+            "config/packages/api_platform.yaml",
+            "config/routes/api_platform.yaml",
+            "src/ApiResource/.gitignore"
+        ]
+    },
+    "doctrine/doctrine-bundle": {
+        "version": "2.13",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.10",
+            "ref": "c170ded8fc587d6bd670550c43dafcf093762245"
+        },
+        "files": [
+            "config/packages/doctrine.yaml",
+            "src/Entity/.gitignore",
+            "src/Repository/.gitignore"
+        ]
+    },
+    "doctrine/doctrine-fixtures-bundle": {
+        "version": "4.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "3.0",
+            "ref": "1f5514cfa15b947298df4d771e694e578d4c204d"
+        },
+        "files": [
+            "src/DataFixtures/AppFixtures.php"
+        ]
+    },
+    "doctrine/doctrine-migrations-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "3.1",
+            "ref": "1d01ec03c6ecbd67c3375c5478c9a423ae5d6a33"
+        },
+        "files": [
+            "config/packages/doctrine_migrations.yaml",
+            "migrations/.gitignore"
+        ]
+    },
+    "nelmio/cors-bundle": {
+        "version": "2.5",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.5",
+            "ref": "6bea22e6c564fba3a1391615cada1437d0bde39c"
+        },
+        "files": [
+            "config/packages/nelmio_cors.yaml"
+        ]
+    },
+    "stof/doctrine-extensions-bundle": {
+        "version": "1.13",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.2",
+            "ref": "e805aba9eff5372e2d149a9ff56566769e22819d"
+        },
+        "files": [
+            "config/packages/stof_doctrine_extensions.yaml"
+        ]
+    },
     "symfony/console": {
         "version": "6.4",
         "recipe": {
@@ -43,6 +120,15 @@
             "src/Kernel.php"
         ]
     },
+    "symfony/maker-bundle": {
+        "version": "1.61",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
+        }
+    },
     "symfony/routing": {
         "version": "6.4",
         "recipe": {
@@ -54,6 +140,56 @@
         "files": [
             "config/packages/routing.yaml",
             "config/routes.yaml"
+        ]
+    },
+    "symfony/security-bundle": {
+        "version": "6.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "6.4",
+            "ref": "2ae08430db28c8eb4476605894296c82a642028f"
+        },
+        "files": [
+            "config/packages/security.yaml",
+            "config/routes/security.yaml"
+        ]
+    },
+    "symfony/twig-bundle": {
+        "version": "6.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "6.4",
+            "ref": "cab5fd2a13a45c266d45a7d9337e28dee6272877"
+        },
+        "files": [
+            "config/packages/twig.yaml",
+            "templates/base.html.twig"
+        ]
+    },
+    "symfony/uid": {
+        "version": "6.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "6.2",
+            "ref": "d294ad4add3e15d7eb1bae0221588ca89b38e558"
+        },
+        "files": [
+            "config/packages/uid.yaml"
+        ]
+    },
+    "symfony/validator": {
+        "version": "6.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "5.3",
+            "ref": "c32cfd98f714894c4f128bb99aa2530c1227603c"
+        },
+        "files": [
+            "config/packages/validator.yaml"
         ]
     }
 }
