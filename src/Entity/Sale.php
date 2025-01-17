@@ -3,6 +3,11 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\SaleRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,49 +15,67 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: SaleRepository::class)]
-#[ApiResource(normalizationContext: ['groups' => ['sale']])]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Post(normalizationContext: ['groups' => ['sale:write']]),
+        new Put(normalizationContext: ['groups' => ['sale:write']]),
+        new Delete(),
+    ],
+    normalizationContext: ['groups' => ['sale:read']],
+)]
 class Sale
 {
+    // dofus tax price is 2%
+    const TAX_PRICE = 0.02;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups('sale')]
+    #[Groups(['sale:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
-    #[Groups('sale')]
-    private ?int $quantity = null;
+    #[Groups(['sale:read', 'sale:write'])]
+    private ?int $quantity = 1;
 
     #[ORM\Column]
-    #[Groups('sale')]
-    private ?int $price = null;
+    #[Groups(['sale:read', 'sale:write'])]
+    private ?int $price = 0;
 
-    #[ORM\Column(nullable: true)]
-    #[Groups('sale')]
-    private ?int $sellPrice = null;
+    #[ORM\Column(nullable: false)]
+    #[Groups(['sale:read', 'sale:write'])]
+    private ?int $sellPrice = 0;
 
-    #[ORM\Column(nullable: true)]
-    #[Groups('sale')]
-    private ?int $taxPrice = null;
+    #[ORM\Column(nullable: false)]
+    #[Groups(['sale:read', 'sale:write'])]
+    private ?int $taxPrice = 0;
 
     #[ORM\Column]
-    #[Groups('sale')]
+    #[Groups(['sale:read', 'sale:write'])]
     private ?bool $sold = false;
 
     #[ORM\Column]
     #[Gedmo\Timestampable]
-    #[Groups('sale')]
+    #[Groups(['sale:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
     #[Gedmo\Timestampable]
-    #[Groups('sale')]
+    #[Groups(['sale:read'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups('sale')]
+    #[Groups(['sale:read', 'sale:write'])]
     private ?Item $item = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable;
+        $this->updatedAt = new \DateTimeImmutable;
+    }
 
     public function getId(): ?int
     {

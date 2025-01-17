@@ -19,11 +19,7 @@ class ItemFixture extends Fixture
         $list = glob(__DIR__ . '/data/*.json');
 
         foreach ($list as $filepath) {
-            $file = iconv(
-                'ISO-8859-1',
-                'UTF-8',
-                file_get_contents($filepath)
-            );
+            $file = file_get_contents($filepath);
 
             $items = $this->serializer->deserialize($file, JsonItem::class . '[]', 'json');
             $this->importJsonIntoDb($manager, $items);
