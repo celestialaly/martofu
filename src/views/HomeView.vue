@@ -1,5 +1,5 @@
 <script setup>
-import SaleComponent from '../components/SaleComponent.vue'
+import SaleComponent from '../package/sales/component/SaleComponent.vue'
 </script>
 
 <template>
