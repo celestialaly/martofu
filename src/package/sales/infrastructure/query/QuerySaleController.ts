@@ -6,13 +6,13 @@ import ApiController from '@/package/common/api/ApiController';
 
 export default class QuerySaleController extends ApiController {
     async retrieveSales(): Promise<HydraCollectionResponse<Sale>> {
-        const sales = await this.api.get<SaleModel>('/sales');
+        const sales = await this.get<SaleModel>('/sales');
 
         return HydraCollectionResponse.from(sales, (model => Sale.fromModel(model)));
     }
 
     async retrieveItems(query?: string): Promise<HydraCollectionResponse<Item>> {
-        const items = await this.api.get<ItemModel>(`/items?title=${query}`);
+        const items = await this.get<ItemModel>(`/items?title=${query}`);
 
         return HydraCollectionResponse.from(items, (model => Item.fromModel(model)));
     }

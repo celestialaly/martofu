@@ -1,3 +1,4 @@
+import ApiException from './ApiException';
 import { type HydraCollectionResponseType } from './HydraCollectionResponse';
 
 export class ServerApi {
@@ -6,10 +7,10 @@ export class ServerApi {
     async get<T>(url: string): Promise<HydraCollectionResponseType<T>> {
         const response = await fetch(`${this.#baseUri}${url}`)
 
-        return await response.json();
+        return await this.#handleResponse<T>(response);
     }
 
-    async post<T>(url: string, body: any): Promise<HydraCollectionResponseType<T>> {
+    async post<T>(url: string, body: object): Promise<HydraCollectionResponseType<T>> {
         const response = await fetch(`${this.#baseUri}${url}`, {
             method: "POST",
             body: JSON.stringify(body),
@@ -18,6 +19,14 @@ export class ServerApi {
             },
         });
 
-        return await response.json();
+        return await this.#handleResponse<T>(response);
+    }
+
+    async #handleResponse<T>(response: Response): Promise<HydraCollectionResponseType<T>> {
+        if (response.ok) {
+            return await response.json();
+        }
+
+        throw new ApiException(response.status, response.statusText);
     }
 }

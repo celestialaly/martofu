@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import QuerySellController from '../infrastructure/query/QuerySaleController';
-import { type Item } from '../domain/Item';
 
 const selectedItem = defineModel();
 

@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import SaleController from '../infrastructure/query/QuerySaleController'
-import { Sale } from '../domain/Sale';
 import AddSaleComponent from './AddSaleComponent.vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import { HydraCollectionResponse } from '../../common/api/HydraCollectionResponse';
 import { onMounted, ref } from 'vue';
+import type { HydraCollectionResponse } from '@/package/common/api/HydraCollectionResponse';
+import type { Sale } from '../domain/Sale';
 
 const controller = new SaleController()
-const sales = ref([])
+const sales = ref<HydraCollectionResponse<Sale>>()
 
 onMounted(() => {
   refreshSales()
@@ -25,7 +25,7 @@ async function refreshSales() {
       <AddSaleComponent @sale:create="refreshSales()" />
     </div>
 
-    <DataTable :value="sales.data" tableStyle="min-width: 50rem">
+    <DataTable :value="sales?.data" tableStyle="min-width: 50rem">
       <Column header="Equipement">
         <template #body="slotProps">
           {{ slotProps.data.item.title }}

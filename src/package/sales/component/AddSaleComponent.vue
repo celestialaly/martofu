@@ -29,7 +29,7 @@ async function saveSale() {
                 <InputGroupAddon>
                     <i class="pi pi-shopping-cart"></i>
                 </InputGroupAddon>
-                <SelectItemAutoComplete v-model="selectedItem" />
+                <SelectItemAutoComplete v-model="selectedItem" required />
             </InputGroup>
 
             <InputGroup class="col">
