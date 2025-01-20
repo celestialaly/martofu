@@ -3,9 +3,11 @@ import { ref } from "vue";
 import QuerySellController from '../infrastructure/query/QuerySaleController';
 
 const selectedItem = defineModel();
+defineProps<{
+    invalid?: boolean
+}>()
 
 const saleController = new QuerySellController();
-const items = ref();
 const filteredItems = ref();
 
 const search = (event) => {
@@ -21,7 +23,8 @@ const search = (event) => {
 
 <template>
     <IftaLabel>
-        <AutoComplete v-model="selectedItem" optionLabel="title" :suggestions="filteredItems" @complete="search" />
+        <AutoComplete v-model="selectedItem" optionLabel="title" :suggestions="filteredItems" @complete="search"
+            :invalid="invalid" />
         <label>Equipement</label>
     </IftaLabel>
 </template>
