@@ -22,6 +22,18 @@ export class ServerApi {
         return await this.#handleResponse<T>(response);
     }
 
+    async put<T>(url: string, body: object): Promise<HydraCollectionResponseType<T>> {
+        const response = await fetch(`${this.#baseUri}${url}`, {
+            method: "PUT",
+            body: JSON.stringify(body),
+            headers: {
+                "Content-Type": "application/ld+json",
+            },
+        });
+
+        return await this.#handleResponse<T>(response);
+    }
+
     async #handleResponse<T>(response: Response): Promise<HydraCollectionResponseType<T>> {
         if (response.ok) {
             return await response.json();

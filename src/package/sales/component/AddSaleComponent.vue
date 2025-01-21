@@ -6,6 +6,7 @@ import SelectItemAutoComplete from './SelectItemAutoComplete.vue';
 import { Sale } from '../domain/Sale';
 import CommandSaleController from '../infrastructure/command/CommandSaleController';
 import type { Item } from "../domain/Item";
+import { useToastStore } from "@/package/common/toastStore";
 
 const visible = ref(false);
 const emit = defineEmits(['sale:create'])
@@ -50,6 +51,7 @@ const submitForm = () => {
 async function saveSale() {
     const sale = Sale.new(state.selectedItem as Item, state.price, state.sellPrice, state.sold);
     await commandSaleController.saveSale(sale);
+    useToastStore().add({ severity: 'success', summary: `Vente ajoutée`, detail: `La vente de votre objet ${sale.item.title} a été ajoutée.`, life: 3000 });
     emit('sale:create')
     visible.value = false
 }

@@ -29,4 +29,16 @@ export default class ApiController {
             throw error
         }
     }
+
+    async put<T>(url: string, body: object): Promise<HydraCollectionResponseType<T>> {
+        try {
+            return await this.api.put(url, body);
+        } catch (error) {
+            if (error instanceof ApiException) {
+                useToastStore().add({ severity: 'error', summary: `[${error.status}] Erreur`, detail: error.message, life: 3000 });
+            }
+
+            throw error
+        }
+    }
 }

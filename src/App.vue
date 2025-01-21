@@ -12,5 +12,5 @@ useToastStore()
     <RouterView />
   </div>
 
-  <Toast />
+  <Toast position="bottom-right" />
 </template>

@@ -4,6 +4,7 @@ export class UpdateSaleModel {
     quantity: number;
     price: number;
     sellPrice: number;
+    taxPrice: number;
     sold: boolean;
     item: string;
 
@@ -11,6 +12,7 @@ export class UpdateSaleModel {
         this.quantity = 1;
         this.price = sale.price;
         this.sellPrice = sale.sellPrice;
+        this.taxPrice = sale.taxPrice;
         this.sold = sale.sold;
         this.item = sale.item["@id"];
     }
