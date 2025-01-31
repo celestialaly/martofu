@@ -1,44 +1,16 @@
 <script setup lang="ts">
 import QuerySaleController from '../infrastructure/query/QuerySaleController'
-import CommandSaleController from '../infrastructure/command/CommandSaleController';
 import AddSaleComponent from './AddSaleComponent.vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import { onMounted, ref, nextTick } from 'vue';
+import { onMounted, ref } from 'vue';
 import type { HydraCollectionResponse } from '@/package/common/api/HydraCollectionResponse';
 import type { Sale } from '../domain/Sale';
-import { useToastStore } from '@/package/common/toastStore';
+import RefreshPricePopoverComponent from './RefreshPricePopoverComponent.vue';
 
 const queryController = new QuerySaleController()
-const commandController = new CommandSaleController()
 const sales = ref<HydraCollectionResponse<Sale>>()
-const refreshPricePopover = ref()
-const selectedSale = ref();
-
-const displayRefreshPricePopover = (event: Event, sale: Sale) => {
-  refreshPricePopover.value.hide();
-
-  if (selectedSale.value?.id === sale.saleId) {
-    selectedSale.value = null;
-  } else {
-    selectedSale.value = sale.clone();
-
-    nextTick(() => {
-      refreshPricePopover.value.show(event);
-    });
-  }
-}
-const hideRefreshPricePopover = () => {
-  refreshPricePopover.value.hide();
-}
-const refreshSalePrice = async () => {
-  if (!selectedSale.value) return
-
-  await commandController.refreshSellPrice(selectedSale.value)
-  useToastStore().add({ severity: 'success', summary: `Prix mis à jour`, detail: `Le prix a bien été mis à jour.`, life: 3000 });
-  await refreshSalesData()
-
-}
+const salePriceRefreshRef = ref<InstanceType<typeof RefreshPricePopoverComponent>>()
 
 onMounted(() => {
   refreshSalesData()
@@ -89,28 +61,11 @@ async function refreshSalesData() {
       <Column header="Actions">
         <template #body="slotProps">
           <Button type="button" size="small" icon="pi pi-refresh" v-tooltip.top="'Mettre à jour le prix de vente'"
-            @click="displayRefreshPricePopover($event, slotProps.data)" />
+            @click="salePriceRefreshRef?.displayRefreshPricePopover($event, slotProps.data)" />
         </template>
       </Column>
     </DataTable>
   </main>
 
-  <Popover ref="refreshPricePopover">
-    <div v-if="selectedSale" class="flex flex-column gap-2">
-      <InputGroup>
-        <InputGroupAddon>
-          <i class="pi pi-dollar"></i>
-        </InputGroupAddon>
-        <IftaLabel>
-          <InputNumber v-model="selectedSale.sellPrice" />
-          <label for="price">Nouveau prix de vente</label>
-        </IftaLabel>
-      </InputGroup>
-
-      <div class="flex gap-2">
-        <Button type="submit" size="small" severity="success" @click="refreshSalePrice">Enregistrer</Button>
-        <Button @click="hideRefreshPricePopover" size="small" severity="secondary">Annuler</Button>
-      </div>
-    </div>
-  </Popover>
+  <RefreshPricePopoverComponent ref="salePriceRefreshRef" @sales:refresh="refreshSalesData" />
 </template>

@@ -1,7 +1,7 @@
 import type { SaleModel } from "../infrastructure/SaleModel";
 import type { Item } from "./Item";
 
-const TAX_PRICE = 0.02;
+export const SALE_TAX_PRICE: number = 0.02;
 
 export class Sale {
     saleId: number | null = null;
@@ -40,7 +40,7 @@ export class Sale {
     }
 
     refreshTaxPrice() {
-        this.taxPrice += this.sellPrice * TAX_PRICE;
+        this.taxPrice += this.sellPrice * SALE_TAX_PRICE;
     }
 
     updateSellPrice(sellPrice: number) {

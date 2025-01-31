@@ -76,7 +76,7 @@ async function saveSale() {
                         <i class="pi pi-dollar"></i>
                     </InputGroupAddon>
                     <IftaLabel>
-                        <InputNumber v-model="state.price" :invalid="v$.price.$errors.length > 0" />
+                        <InputNumber suffix="k" v-model="state.price" :invalid="v$.price.$errors.length > 0" />
                         <label for="price">Investissement</label>
                     </IftaLabel>
 
@@ -87,7 +87,7 @@ async function saveSale() {
                         <i class="pi pi-dollar"></i>
                     </InputGroupAddon>
                     <IftaLabel>
-                        <InputNumber v-model="state.sellPrice" :invalid="v$.sellPrice.$errors.length > 0" />
+                        <InputNumber suffix="k" v-model="state.sellPrice" :invalid="v$.sellPrice.$errors.length > 0" />
                         <label for="price">Prix de vente</label>
                     </IftaLabel>
                 </InputGroup>
