@@ -15,7 +15,7 @@ export class HydraCollectionResponse<T> {
         this.data = data;
     }
 
-    static from<T>(hydraCollection: HydraCollectionResponseType<any>, domainMapper: (value: any) => T) {
+    static from<T, U>(hydraCollection: HydraCollectionResponseType<U>, domainMapper: (value: U) => T) {
         return new HydraCollectionResponse(
             hydraCollection['hydra:totalItems'],
             hydraCollection['hydra:member'].map(domainMapper)

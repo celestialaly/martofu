@@ -6,11 +6,14 @@ import Column from 'primevue/column';
 import { onMounted, ref } from 'vue';
 import type { HydraCollectionResponse } from '@/package/common/api/HydraCollectionResponse';
 import type { Sale } from '../domain/Sale';
-import RefreshPricePopoverComponent from './RefreshPricePopoverComponent.vue';
+import RefreshPricePopoverComponent from './popover/RefreshPricePopoverComponent.vue';
+import MarkAsSoldPopoverComponent from './popover/MarkAsSoldPopoverComponent.vue';
+import UndoSaleConfirmComponent from './popover/UndoSaleConfirmComponent.vue';
 
 const queryController = new QuerySaleController()
 const sales = ref<HydraCollectionResponse<Sale>>()
 const salePriceRefreshRef = ref<InstanceType<typeof RefreshPricePopoverComponent>>()
+const markAsSoldRef = ref<InstanceType<typeof MarkAsSoldPopoverComponent>>()
 
 onMounted(() => {
   refreshSalesData()
@@ -27,10 +30,14 @@ async function refreshSalesData() {
       <AddSaleComponent @sale:create="refreshSalesData()" />
     </div>
 
-    <DataTable :value="sales?.data" tableStyle="min-width: 50rem">
+    <DataTable :value="sales?.data">
       <Column header="Equipement">
         <template #body="slotProps">
-          {{ slotProps.data.item.title }}
+          <div class="flex gap-2">
+            <div class="table-indicator" :class="[slotProps.data.sold ? 'bg-green-600' : 'bg-red-600']">
+            </div>
+            <div>{{ slotProps.data.item.title }}</div>
+          </div>
         </template>
       </Column>
       <Column header="Profit estimé">
@@ -60,12 +67,22 @@ async function refreshSalesData() {
       </Column>
       <Column header="Actions">
         <template #body="slotProps">
-          <Button type="button" size="small" icon="pi pi-refresh" v-tooltip.top="'Mettre à jour le prix de vente'"
-            @click="salePriceRefreshRef?.displayRefreshPricePopover($event, slotProps.data)" />
+          <div class="flex gap-2" v-if="slotProps.data.sold">
+            <UndoSaleConfirmComponent :sale="slotProps.data" />
+          </div>
+          <div class="flex gap-2" v-else>
+            <Button severity="secondary" size="small" icon="pi pi-tag" v-tooltip.top="'Mettre à jour le prix de vente'"
+              @click="salePriceRefreshRef?.displayPopover($event, slotProps.data)" />
+
+            <Button size="small" icon="pi pi-check" v-tooltip.top="'Marquer comme vendu'"
+              @click="markAsSoldRef?.displayPopover($event, slotProps.data)" />
+          </div>
         </template>
       </Column>
     </DataTable>
   </main>
 
   <RefreshPricePopoverComponent ref="salePriceRefreshRef" @sales:refresh="refreshSalesData" />
+  <MarkAsSoldPopoverComponent ref="markAsSoldRef" @sales:refresh="refreshSalesData" />
+  <ConfirmPopup></ConfirmPopup>
 </template>

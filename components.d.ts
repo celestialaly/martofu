@@ -10,6 +10,7 @@ declare module 'vue' {
     AutoComplete: typeof import('primevue/autocomplete')['default']
     Button: typeof import('primevue/button')['default']
     Checkbox: typeof import('primevue/checkbox')['default']
+    ConfirmPopup: typeof import('primevue/confirmpopup')['default']
     Dialog: typeof import('primevue/dialog')['default']
     IftaLabel: typeof import('primevue/iftalabel')['default']
     InputGroup: typeof import('primevue/inputgroup')['default']

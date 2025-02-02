@@ -50,7 +50,7 @@ const submitForm = () => {
 
 async function saveSale() {
     const sale = Sale.new(state.selectedItem as Item, state.price, state.sellPrice, state.sold);
-    await commandSaleController.saveSale(sale);
+    await commandSaleController.save(sale);
     useToastStore().add({ severity: 'success', summary: `Vente ajoutée`, detail: `La vente de votre objet ${sale.item.title} a été ajoutée.`, life: 3000 });
     emit('sale:create')
     visible.value = false

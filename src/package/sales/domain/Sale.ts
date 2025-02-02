@@ -43,11 +43,17 @@ export class Sale {
         this.taxPrice += this.sellPrice * SALE_TAX_PRICE;
     }
 
-    updateSellPrice(sellPrice: number) {
+    updateSellPrice(sellPrice: number, refreshTaxPrice: boolean = true) {
         this.sellPrice = sellPrice;
-        this.refreshTaxPrice();
+
+        if (refreshTaxPrice) {
+            this.refreshTaxPrice();
+        }
     }
 
+    undoSale() {
+        this.sold = false
+    }
     markAsSold() {
         this.sold = true;
     }
