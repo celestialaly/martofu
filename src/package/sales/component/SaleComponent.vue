@@ -3,7 +3,7 @@ import QuerySaleController from '../infrastructure/query/QuerySaleController'
 import AddSaleComponent from './AddSaleComponent.vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import type { HydraCollectionResponse } from '@/package/common/api/HydraCollectionResponse';
 import type { Sale } from '../domain/Sale';
 import RefreshPricePopoverComponent from './popover/RefreshPricePopoverComponent.vue';
@@ -11,16 +11,28 @@ import MarkAsSoldPopoverComponent from './popover/MarkAsSoldPopoverComponent.vue
 import UndoSaleConfirmComponent from './popover/UndoSaleConfirmComponent.vue';
 
 const queryController = new QuerySaleController()
-const sales = ref<HydraCollectionResponse<Sale>>()
 const salePriceRefreshRef = ref<InstanceType<typeof RefreshPricePopoverComponent>>()
 const markAsSoldRef = ref<InstanceType<typeof MarkAsSoldPopoverComponent>>()
+
+const sales = ref<HydraCollectionResponse<Sale>>()
+const totalRecords = computed(() => sales.value?.total);
+
+const page = ref(0);
+const rowOptions = [10, 25, 50];
+const limit = ref(rowOptions[0]);
+const offset = computed(() => Number(limit.value * page.value));
 
 onMounted(() => {
   refreshSalesData()
 })
 
 async function refreshSalesData() {
-  sales.value = await queryController.retrieveSales()
+  sales.value = await queryController.retrieveSales(page.value + 1, limit.value)
+}
+
+async function onPageChange(event: { page: number }) {
+  page.value = event.page;
+  refreshSalesData()
 }
 </script>
 
@@ -30,7 +42,8 @@ async function refreshSalesData() {
       <AddSaleComponent @sale:create="refreshSalesData()" />
     </div>
 
-    <DataTable :value="sales?.data">
+    <DataTable lazy paginator :value="sales?.data" :totalRecords :first="offset" :rows="limit"
+      :rowsPerPageOptions="rowOptions" @page="onPageChange($event)" @update:rows="limit = $event">
       <Column header="Equipement">
         <template #body="slotProps">
           <div class="flex gap-2">

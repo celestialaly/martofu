@@ -2,10 +2,17 @@ import ApiException from './ApiException';
 import { type HydraCollectionResponseType } from './HydraCollectionResponse';
 
 export class ServerApi {
+    // TODO: Set in env variable
     #baseUri = "http://127.0.0.1:8000/api";
 
-    async get<T>(url: string): Promise<HydraCollectionResponseType<T>> {
-        const response = await fetch(`${this.#baseUri}${url}`)
+    async get<T>(url: string, parameters: object): Promise<HydraCollectionResponseType<T>> {
+        const urlWithParams = new URL(`${this.#baseUri}${url}`);
+
+        for (const [key, value] of Object.entries(parameters)) {
+            urlWithParams.searchParams.set(key, value);
+        }
+
+        const response = await fetch(urlWithParams.href)
 
         return await this.#handleResponse<T>(response);
     }

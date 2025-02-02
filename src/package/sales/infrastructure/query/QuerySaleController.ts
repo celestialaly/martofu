@@ -5,8 +5,8 @@ import { HydraCollectionResponse } from '@/package/common/api/HydraCollectionRes
 import ApiController from '@/package/common/api/ApiController';
 
 export default class QuerySaleController extends ApiController {
-    async retrieveSales(): Promise<HydraCollectionResponse<Sale>> {
-        const sales = await this.get<SaleModel>('/sales');
+    async retrieveSales(page: number = 1, limit: number = 25): Promise<HydraCollectionResponse<Sale>> {
+        const sales = await this.getPaginated<SaleModel>('/sales', page, limit);
 
         return HydraCollectionResponse.from<Sale, SaleModel>(sales, (model => Sale.fromModel(model)));
     }

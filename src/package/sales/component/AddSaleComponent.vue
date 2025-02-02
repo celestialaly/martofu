@@ -18,12 +18,13 @@ interface AddSaleForm {
     sellPrice: number
     sold: boolean
 }
-const state: AddSaleForm = reactive({
+const initialState: AddSaleForm = {
     selectedItem: null,
     price: 0,
     sellPrice: 0,
     sold: false
-})
+}
+const state = reactive({ ...initialState })
 const rules = computed(() => (
     {
         selectedItem: { required },
@@ -31,12 +32,12 @@ const rules = computed(() => (
         sellPrice: { required },
     }
 ));
+
 const v$ = useVuelidate<AddSaleForm>(rules, state)
 const submitForm = () => {
     const result = v$.value.$validate();
 
     result.then((res) => {
-        console.log(state);
         if (!res) {
             return
         }
@@ -53,7 +54,13 @@ async function saveSale() {
     await commandSaleController.save(sale);
     useToastStore().add({ severity: 'success', summary: `Vente ajoutée`, detail: `La vente de votre objet ${sale.item.title} a été ajoutée.`, life: 3000 });
     emit('sale:create')
+    closeAndResetForm()
+}
+
+const closeAndResetForm = () => {
     visible.value = false
+    Object.assign(state, initialState);
+    v$.value.$reset()
 }
 </script>
 

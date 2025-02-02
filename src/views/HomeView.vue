@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import SaleComponent from '../package/sales/component/SaleComponent.vue'
 </script>
 
