@@ -27,9 +27,6 @@ use Symfony\Component\Serializer\Attribute\Groups;
 )]
 class Sale
 {
-    // dofus tax price is 2%
-    const TAX_PRICE = 0.02;
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
