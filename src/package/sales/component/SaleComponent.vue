@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import QuerySaleController from '../infrastructure/query/QuerySaleController'
 import AddSaleComponent from './AddSaleComponent.vue';
-import DataTable from 'primevue/datatable';
+import DataTable, { type DataTablePageEvent, type DataTableSortEvent } from 'primevue/datatable';
 import Column from 'primevue/column';
 import { computed, onMounted, ref } from 'vue';
-import type { HydraCollectionResponse } from '@/package/common/api/HydraCollectionResponse';
+import { HydraCollectionResponse } from '@/package/common/api/HydraCollectionResponse';
 import type { Sale } from '../domain/Sale';
 import RefreshPricePopoverComponent from './popover/RefreshPricePopoverComponent.vue';
 import MarkAsSoldPopoverComponent from './popover/MarkAsSoldPopoverComponent.vue';
 import UndoSaleConfirmComponent from './popover/UndoSaleConfirmComponent.vue';
+import { ApiPaginator } from '@/package/common/api/ApiPaginator';
 
 const queryController = new QuerySaleController()
 const salePriceRefreshRef = ref<InstanceType<typeof RefreshPricePopoverComponent>>()
@@ -21,17 +22,25 @@ const page = ref(0);
 const rowOptions = [10, 25, 50];
 const limit = ref(rowOptions[0]);
 const offset = computed(() => Number(limit.value * page.value));
+const paginator = new ApiPaginator()
 
 onMounted(() => {
   refreshSalesData()
 })
 
 async function refreshSalesData() {
-  sales.value = await queryController.retrieveSales(page.value + 1, limit.value)
+  paginator.setPage(page.value, limit.value)
+  sales.value = await queryController.retrieveSales(paginator)
 }
 
-async function onPageChange(event: { page: number }) {
+async function onPageChange(event: DataTablePageEvent) {
   page.value = event.page;
+  refreshSalesData()
+}
+
+async function onSort(event: DataTableSortEvent) {
+  paginator.setSort(event)
+  console.log(paginator)
   refreshSalesData()
 }
 </script>
@@ -42,9 +51,9 @@ async function onPageChange(event: { page: number }) {
       <AddSaleComponent @sale:create="refreshSalesData()" />
     </div>
 
-    <DataTable lazy paginator :value="sales?.data" :totalRecords :first="offset" :rows="limit"
-      :rowsPerPageOptions="rowOptions" @page="onPageChange($event)" @update:rows="limit = $event">
-      <Column header="Equipement">
+    <DataTable lazy paginator removableSort :value="sales?.data" :totalRecords :first="offset" :rows="limit"
+      :rowsPerPageOptions="rowOptions" @page="onPageChange" @sort="onSort" @update:rows="limit = $event">
+      <Column header="Equipement" field="item.title" sortable>
         <template #body="slotProps">
           <div class="flex gap-2">
             <div class="table-indicator" :class="[slotProps.data.sold ? 'bg-green-600' : 'bg-red-600']">
@@ -58,22 +67,22 @@ async function onPageChange(event: { page: number }) {
           {{ (slotProps.data.sellPrice - slotProps.data.price - slotProps.data.taxPrice).toLocaleString() }}k
         </template>
       </Column>
-      <Column header="Investissement">
+      <Column header="Investissement" field="price" sortable>
         <template #body="slotProps">
           {{ slotProps.data.price.toLocaleString() }}k
         </template>
       </Column>
-      <Column header="Prix de vente">
+      <Column header="Prix de vente" field="sellPrice" sortable>
         <template #body="slotProps">
           {{ slotProps.data.sellPrice.toLocaleString() }}k
         </template>
       </Column>
-      <Column header="Taxe HDV (cumulé)">
+      <Column header="Taxe HDV (cumulé)" field="taxPrice" sortable>
         <template #body="slotProps">
           {{ slotProps.data.taxPrice.toLocaleString() }}k
         </template>
       </Column>
-      <Column header="Vendu ?">
+      <Column header="Vendu ?" field="sold" sortable>
         <template #body="slotProps">
           {{ slotProps.data.sold ? 'Oui' : 'Non' }}
         </template>

@@ -9,7 +9,13 @@ export class ServerApi {
         const urlWithParams = new URL(`${this.#baseUri}${url}`);
 
         for (const [key, value] of Object.entries(parameters)) {
-            urlWithParams.searchParams.set(key, value);
+            if (typeof value === "object") {
+                for (const [subKey, subValue] of Object.entries(value)) {
+                    urlWithParams.searchParams.set(`${key}[${subKey}]`, subValue as string);
+                }
+            } else {
+                urlWithParams.searchParams.set(key, value);
+            }
         }
 
         const response = await fetch(urlWithParams.href)

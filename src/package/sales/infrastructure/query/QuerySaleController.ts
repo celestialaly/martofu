@@ -3,10 +3,11 @@ import { Sale } from '../../domain/Sale';
 import { type ItemModel, type SaleModel } from '../SaleModel'
 import { HydraCollectionResponse } from '@/package/common/api/HydraCollectionResponse';
 import ApiController from '@/package/common/api/ApiController';
+import type { ApiPaginator } from '@/package/common/api/ApiPaginator';
 
 export default class QuerySaleController extends ApiController {
-    async retrieveSales(page: number = 1, limit: number = 25): Promise<HydraCollectionResponse<Sale>> {
-        const sales = await this.getPaginated<SaleModel>('/sales', page, limit);
+    async retrieveSales(paginator: ApiPaginator): Promise<HydraCollectionResponse<Sale>> {
+        const sales = await this.getPaginated<SaleModel>('/sales', paginator);
 
         return HydraCollectionResponse.from<Sale, SaleModel>(sales, (model => Sale.fromModel(model)));
     }

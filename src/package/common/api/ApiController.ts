@@ -1,5 +1,6 @@
 import { useToastStore } from "../toastStore";
 import ApiException from "./ApiException";
+import type { ApiPaginator } from "./ApiPaginator";
 import type { HydraCollectionResponseType } from "./HydraCollectionResponse";
 import { ServerApi } from "./ServerApi";
 
@@ -18,9 +19,9 @@ export default class ApiController {
         }
     }
 
-    async getPaginated<T>(url: string, page: number = 1, limit: number = 25): Promise<HydraCollectionResponseType<T>> {
+    async getPaginated<T>(url: string, paginator: ApiPaginator): Promise<HydraCollectionResponseType<T>> {
         try {
-            return await this.api.get(url, { page: page, limit: limit });
+            return await this.api.get(url, paginator.getSearchParameters());
         } catch (error) {
             if (error instanceof ApiException) {
                 useToastStore().add({ severity: 'error', summary: `[${error.status}] Erreur`, detail: error.message, life: 3000 });
