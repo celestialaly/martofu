@@ -86,7 +86,6 @@ const closeAndResetForm = () => {
                         <InputNumber suffix="k" v-model="state.price" :invalid="v$.price.$errors.length > 0" />
                         <label for="price">Investissement</label>
                     </IftaLabel>
-
                 </InputGroup>
 
                 <InputGroup class="col">

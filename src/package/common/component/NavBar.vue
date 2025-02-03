@@ -7,10 +7,16 @@ import Menubar from 'primevue/menubar';
 const router = useRouter();
 const items = ref([
     {
+        label: 'Accueil',
+        icon: 'pi pi-home',
+        command: () => {
+            router.push('/');
+        }
+    }, {
         label: 'Ventes',
         icon: 'pi pi-shopping-cart',
         command: () => {
-            router.push('/');
+            router.push('/sales');
         }
     }, {
         label: 'About',
@@ -37,6 +43,14 @@ const items = ref([
                     <span>{{ item.label }}</span>
                     <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down" />
                 </a>
+            </template>
+            <template #end>
+                <div class="flex items-center align-items-center gap-2">
+                    <RouterLink to="/register">
+                        <Button label="S'inscrire" size="small" icon="pi pi-user" />
+                    </RouterLink>
+                    <Avatar icon="pi pi-user" class="mr-2" shape="circle" />
+                </div>
             </template>
         </Menubar>
     </header>
