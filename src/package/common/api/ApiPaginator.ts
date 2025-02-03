@@ -1,9 +1,10 @@
-import type { DataTableSortEvent } from "primevue"
+import type { DataTableFilterEvent, DataTableSortEvent } from "primevue"
 
 type PaginatorSearchParameters = {
     page: number,
     limit: number,
-    order?: undefined | PaginatorSearchParametersOrder
+    order?: undefined | PaginatorSearchParametersOrder,
+    [key: string]: string | number | PaginatorSearchParametersOrder | undefined
 }
 
 type PaginatorSearchParametersOrder = {
@@ -15,6 +16,8 @@ export class ApiPaginator {
     limit: number = 25
     sortField: string | undefined
     sortOrder: string | undefined
+    filterField: string | undefined
+    filterValue: string | undefined | null
 
     setPage(page: number, limit: number) {
         this.page = page + 1;
@@ -22,8 +25,15 @@ export class ApiPaginator {
     }
 
     setSort(event: DataTableSortEvent) {
-        this.sortField = event.sortField as string
-        this.sortOrder = event.sortOrder == -1 ? 'desc' : 'asc'
+        this.sortField = event.sortField as string;
+        this.sortOrder = event.sortOrder == -1 ? 'desc' : 'asc';
+    }
+
+    setFilter(field: string, value: string | null) {
+        this.filterField = field;
+        this.filterValue = value;
+
+        console.log(field, value)
     }
 
     getSearchParameters() {
@@ -37,6 +47,11 @@ export class ApiPaginator {
                 [this.sortField]: this.sortOrder
             }
         }
+        if (this.filterValue && this.filterField) {
+            params[this.filterField] = this.filterValue
+        }
+
+        console.log(this, params)
 
         return params;
     }

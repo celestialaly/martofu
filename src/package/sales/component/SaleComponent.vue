@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import QuerySaleController from '../infrastructure/query/QuerySaleController'
 import AddSaleComponent from './AddSaleComponent.vue';
-import DataTable, { type DataTablePageEvent, type DataTableSortEvent } from 'primevue/datatable';
+import DataTable, { type DataTableFilterEvent, type DataTableFilterMeta, type DataTablePageEvent, type DataTableSortEvent } from 'primevue/datatable';
+import { FilterMatchMode } from '@primevue/core/api';
 import Column from 'primevue/column';
 import { computed, onMounted, ref } from 'vue';
 import { HydraCollectionResponse } from '@/package/common/api/HydraCollectionResponse';
@@ -19,9 +20,12 @@ const sales = ref<HydraCollectionResponse<Sale>>()
 const totalRecords = computed(() => sales.value?.total);
 
 const page = ref(0);
-const rowOptions = [10, 25, 50];
-const limit = ref(rowOptions[0]);
+const rowOptions = [5, 10, 25];
+const limit = ref(rowOptions[1]);
 const offset = computed(() => Number(limit.value * page.value));
+const filters = ref({
+  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+});
 const paginator = new ApiPaginator()
 
 onMounted(() => {
@@ -40,9 +44,15 @@ async function onPageChange(event: DataTablePageEvent) {
 
 async function onSort(event: DataTableSortEvent) {
   paginator.setSort(event)
-  console.log(paginator)
   refreshSalesData()
 }
+
+async function onFilter() {
+  const globalFilter = filters.value['global'].value
+  paginator.setFilter('item.title', globalFilter)
+  refreshSalesData()
+}
+
 </script>
 
 <template>
@@ -52,7 +62,21 @@ async function onSort(event: DataTableSortEvent) {
     </div>
 
     <DataTable lazy paginator removableSort :value="sales?.data" :totalRecords :first="offset" :rows="limit"
-      :rowsPerPageOptions="rowOptions" @page="onPageChange" @sort="onSort" @update:rows="limit = $event">
+      :rowsPerPageOptions="rowOptions" @page="onPageChange" @sort="onSort" @update:rows="limit = $event"
+      :globalFilterFields="['item.title']">
+      <template #header>
+        <div class="flex justify-end">
+          <IconField>
+            <InputIcon>
+              <i class="pi pi-search" />
+            </InputIcon>
+            <InputText v-model="filters['global'].value" placeholder="Rechercher par équipement" @input="onFilter" />
+          </IconField>
+        </div>
+      </template>
+      <template #empty>Aucune vente listée.</template>
+      <template #loading>Récupération des données en cours...</template>
+
       <Column header="Equipement" field="item.title" sortable>
         <template #body="slotProps">
           <div class="flex gap-2">
