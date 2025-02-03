@@ -74,6 +74,10 @@ class Sale
     #[Groups(['sale:read', 'sale:write'])]
     private ?Item $item = null;
 
+    #[ORM\ManyToOne(inversedBy: 'sales')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable;
@@ -177,6 +181,18 @@ class Sale
     public function setSold(bool $sold): static
     {
         $this->sold = $sold;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
