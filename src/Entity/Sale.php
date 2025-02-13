@@ -11,7 +11,11 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Dto\SaleCreateDto;
+use App\Dto\SaleUpdateDto;
 use App\Repository\SaleRepository;
+use App\State\SaleCreateProcessor;
+use App\State\SaleUpdateProcessor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -22,8 +26,8 @@ use Symfony\Component\Serializer\Attribute\Groups;
     operations: [
         new Get(),
         new GetCollection(),
-        new Post(normalizationContext: ['groups' => ['sale:write']]),
-        new Put(normalizationContext: ['groups' => ['sale:write']]),
+        new Post(normalizationContext: ['groups' => ['sale:write']], input: SaleCreateDto::class, processor: SaleCreateProcessor::class),
+        new Put(normalizationContext: ['groups' => ['sale:write']], input: SaleUpdateDto::class, processor: SaleUpdateProcessor::class),
         new Delete(),
     ],
     normalizationContext: ['groups' => ['sale:read']],
@@ -76,6 +80,7 @@ class Sale
 
     #[ORM\ManyToOne(inversedBy: 'sales')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Gedmo\Blameable]
     private ?User $user = null;
 
     public function __construct()
@@ -87,6 +92,13 @@ class Sale
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): static
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getQuantity(): ?int
