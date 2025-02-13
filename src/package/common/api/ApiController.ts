@@ -1,4 +1,4 @@
-import { useToastStore } from "../toastStore";
+import { useToastStore } from "../stores/toastStore";
 import ApiException from "./ApiException";
 import type { ApiPaginator } from "./ApiPaginator";
 import type { HydraCollectionResponseType } from "./HydraCollectionResponse";
@@ -7,7 +7,7 @@ import { ServerApi } from "./ServerApi";
 export default class ApiController {
     api: ServerApi = new ServerApi()
 
-    async get<T>(url: string, parameters: object = {}): Promise<HydraCollectionResponseType<T>> {
+    async get<T>(url: string, parameters: object = {}): Promise<T> {
         try {
             return await this.api.get(url, parameters);
         } catch (error) {
@@ -31,9 +31,9 @@ export default class ApiController {
         }
     }
 
-    async post<T>(url: string, body: object): Promise<HydraCollectionResponseType<T>> {
+    async post<T>(url: string, body: unknown): Promise<T> {
         try {
-            return await this.api.post(url, body);
+            return await this.api.post(url, body as Record<string, unknown>);
         } catch (error) {
             if (error instanceof ApiException) {
                 useToastStore().add({ severity: 'error', summary: `[${error.status}] Erreur`, detail: error.message, life: 3000 });
@@ -43,9 +43,9 @@ export default class ApiController {
         }
     }
 
-    async put<T>(url: string, body: object): Promise<HydraCollectionResponseType<T>> {
+    async put<T>(url: string, body: unknown): Promise<T> {
         try {
-            return await this.api.put(url, body);
+            return await this.api.put(url, body as Record<string, unknown>);
         } catch (error) {
             if (error instanceof ApiException) {
                 useToastStore().add({ severity: 'error', summary: `[${error.status}] Erreur`, detail: error.message, life: 3000 });

@@ -6,7 +6,7 @@ import SelectItemAutoComplete from './SelectItemAutoComplete.vue';
 import { Sale } from '../domain/Sale';
 import CommandSaleController from '../infrastructure/command/CommandSaleController';
 import type { Item } from "../domain/Item";
-import { useToastStore } from "@/package/common/toastStore";
+import { useToastStore } from "@/package/common/stores/toastStore";
 
 const visible = ref(false);
 const emit = defineEmits(['sale:create'])

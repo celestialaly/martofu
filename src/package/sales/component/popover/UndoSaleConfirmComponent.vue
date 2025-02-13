@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useConfirm } from 'primevue';
 import type { Sale } from '../../domain/Sale';
-import { useToastStore } from '@/package/common/toastStore';
+import { useToastStore } from '@/package/common/stores/toastStore';
 import CommandSaleController from '../../infrastructure/command/CommandSaleController';
 import { SalesEvent } from '../../domain/SalesEvent';
 

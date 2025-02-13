@@ -2,7 +2,7 @@
 import { ref, nextTick } from 'vue';
 import CommandSaleController from '../../infrastructure/command/CommandSaleController';
 import { SALE_TAX_PRICE, type Sale } from '../../domain/Sale';
-import { useToastStore } from '@/package/common/toastStore';
+import { useToastStore } from '@/package/common/stores/toastStore';
 import { SalesEvent } from '../../domain/SalesEvent';
 
 const popover = ref()

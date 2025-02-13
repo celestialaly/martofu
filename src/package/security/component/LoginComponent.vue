@@ -1,21 +1,19 @@
 <script setup lang="ts">
 import { computed, reactive } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
-import { required, email, sameAs } from '@vuelidate/validators';
+import { required, email } from '@vuelidate/validators';
 import CommandUserController from '../infrastructure/command/CommandUserController';
-import User from '../domain/User';
 import { useToastStore } from '@/package/common/stores/toastStore';
+import { useAuthStore } from '@/package/common/stores/authStore';
 
-interface RegisterForm {
+interface LoginForm {
     email: string,
-    password: string,
-    repeatedPassword: string,
+    password: string
 }
 
-const initialState: RegisterForm = {
+const initialState: LoginForm = {
     email: '',
     password: '',
-    repeatedPassword: '',
 }
 
 const commandUserController = new CommandUserController()
@@ -24,11 +22,10 @@ const rules = computed(() => (
     {
         email: { required, email },
         password: { required },
-        repeatedPassword: { required, sameAsRef: sameAs(state.password) },
     }
 ));
 
-const v$ = useVuelidate<RegisterForm>(rules, state)
+const v$ = useVuelidate<LoginForm>(rules, state)
 const submitForm = () => {
     const result = v$.value.$validate();
 
@@ -37,7 +34,7 @@ const submitForm = () => {
             return
         }
 
-        registerUser()
+        loginUser()
     }).catch((err) => {
         console.log(err);
     })
@@ -48,10 +45,10 @@ const resetForm = () => {
     v$.value.$reset()
 }
 
-const registerUser = async () => {
-    const user = User.new(state.email, state.password)
-    await commandUserController.register(user)
-    useToastStore().add({ severity: 'success', summary: `Compte créé`, detail: `Votre compte vient d'être créé, bienvenue !`, life: 3000 });
+const loginUser = async () => {
+    const authUser = await commandUserController.login(state.email, state.password)
+    useAuthStore().login(state.email, authUser.token)
+    useToastStore().add({ severity: 'success', summary: `Connecté·e`, detail: `Bienvenue dans le Krosmoz !`, life: 3000 });
     resetForm()
 }
 </script>
@@ -60,7 +57,7 @@ const registerUser = async () => {
     <Suspense>
         <form @submit.prevent="submitForm">
             <Card style="width: 65rem; margin: auto; margin-top: 15px;">
-                <template #title>Créer mon compte</template>
+                <template #title>Connexion</template>
                 <template #content>
                     <div class="flex flex-column gap-2 mt-0.5">
                         <InputGroup>
@@ -83,26 +80,11 @@ const registerUser = async () => {
                                 <label for="password">Mot de passe</label>
                             </IftaLabel>
                         </InputGroup>
-
-                        <InputGroup>
-                            <InputGroupAddon>
-                                <i class="pi pi-key"></i>
-                            </InputGroupAddon>
-                            <IftaLabel>
-                                <Password :feedback="false" toggleMask v-model="state.repeatedPassword"
-                                    :invalid="v$.repeatedPassword.$errors.length > 0" />
-                                <label for="password">Mot de passe (confirmation)</label>
-                            </IftaLabel>
-                        </InputGroup>
-                        <div v-if="v$.repeatedPassword.$errors.length > 0">
-                            <Message v-for="error of v$.repeatedPassword.$errors" v-bind:key="error.$uid" size="small"
-                                severity="error" variant="simple">{{ error.$message }}</Message>
-                        </div>
                     </div>
                 </template>
                 <template #footer>
                     <div class="flex gap-4 mt-1">
-                        <Button type="submit" label="Créer mon compte" class="w-full" />
+                        <Button type="submit" label="Me connecter" class="w-full" />
                     </div>
                 </template>
             </Card>

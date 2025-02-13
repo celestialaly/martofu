@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import NavBar from './package/common/component/NavBar.vue'
-import { useToastStore } from './package/common/toastStore';
+import { useToastStore } from './package/common/stores/toastStore';
 
 useToastStore()
 </script>

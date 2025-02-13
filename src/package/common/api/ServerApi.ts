@@ -1,12 +1,10 @@
-import ApiException from './ApiException';
-import { type HydraCollectionResponseType } from './HydraCollectionResponse';
+import { fetchWrapper } from '../helpers/fetchWrapper';
+
+const baseUrl = import.meta.env.VITE_API_URL;
 
 export class ServerApi {
-    // TODO: Set in env variable
-    #baseUri = "http://127.0.0.1:8000/api";
-
-    async get<T>(url: string, parameters: object): Promise<HydraCollectionResponseType<T>> {
-        const urlWithParams = new URL(`${this.#baseUri}${url}`);
+    async get<T>(url: string, parameters: object): Promise<T> {
+        const urlWithParams = new URL(`${baseUrl}${url}`);
 
         for (const [key, value] of Object.entries(parameters)) {
             if (typeof value === "object") {
@@ -18,40 +16,14 @@ export class ServerApi {
             }
         }
 
-        const response = await fetch(urlWithParams.href)
-
-        return await this.#handleResponse<T>(response);
+        return await fetchWrapper.get<T>(urlWithParams.href)
     }
 
-    async post<T>(url: string, body: object): Promise<HydraCollectionResponseType<T>> {
-        const response = await fetch(`${this.#baseUri}${url}`, {
-            method: "POST",
-            body: JSON.stringify(body),
-            headers: {
-                "Content-Type": "application/ld+json",
-            },
-        });
-
-        return await this.#handleResponse<T>(response);
+    async post<T>(url: string, body: Record<string, unknown>): Promise<T> {
+        return await fetchWrapper.post<T>(`${baseUrl}${url}`, body);
     }
 
-    async put<T>(url: string, body: object): Promise<HydraCollectionResponseType<T>> {
-        const response = await fetch(`${this.#baseUri}${url}`, {
-            method: "PUT",
-            body: JSON.stringify(body),
-            headers: {
-                "Content-Type": "application/ld+json",
-            },
-        });
-
-        return await this.#handleResponse<T>(response);
-    }
-
-    async #handleResponse<T>(response: Response): Promise<HydraCollectionResponseType<T>> {
-        if (response.ok) {
-            return await response.json();
-        }
-
-        throw new ApiException(response.status, response.statusText);
+    async put<T>(url: string, body: Record<string, unknown>): Promise<T> {
+        return await fetchWrapper.put<T>(`${baseUrl}${url}`, body);
     }
 }

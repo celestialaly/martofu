@@ -51,8 +51,6 @@ export class ApiPaginator {
             params[this.filterField] = this.filterValue
         }
 
-        console.log(this, params)
-
         return params;
     }
 }

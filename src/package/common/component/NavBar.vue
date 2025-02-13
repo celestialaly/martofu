@@ -3,6 +3,9 @@ import { useRouter } from 'vue-router'
 import { ref } from "vue";
 
 import Menubar from 'primevue/menubar';
+import { useAuthStore } from '../stores/authStore';
+
+const authStore = useAuthStore();
 
 const router = useRouter();
 const items = ref([
@@ -45,7 +48,14 @@ const items = ref([
                 </a>
             </template>
             <template #end>
-                <div class="flex items-center align-items-center gap-2">
+                <div class="flex items-center align-items-center gap-2" v-if="authStore.user">
+                    <Button as="a" @click="authStore.logout()" label="Déconnexion" size="small" icon="pi pi-user" />
+                    <Avatar icon="pi pi-user" class="mr-2" shape="circle" />
+                </div>
+                <div class="flex items-center align-items-center gap-2" v-else>
+                    <RouterLink to="/auth">
+                        <Button label="Connexion" size="small" icon="pi pi-user" />
+                    </RouterLink>
                     <RouterLink to="/register">
                         <Button label="S'inscrire" size="small" icon="pi pi-user" />
                     </RouterLink>
