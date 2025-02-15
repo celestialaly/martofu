@@ -1,0 +1,7 @@
+@import './base.css';
+
+.table-indicator {
+  max-width: 2px;
+  width: 2px;
+  height: 18px;
+}
