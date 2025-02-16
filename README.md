@@ -1,45 +1,24 @@
-# .
+# Martofu
 
-This template should help get you started developing with Vue 3 in Vite.
+Martofu makes your Dofus sales easier to follow
 
-## Recommended IDE Setup
+## Stack
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- Symfony 6.4 with [API Platform 3.4](https://api-platform.com/)
+- Vue 3
+    - [PrimeVue](https://primevue.org/) - UI library
+    - [PrimeFlex](https://primeflex.org/) - CSS Utility Library
+    - [Vuelidate](https://vuelidate-next.netlify.app/) - Form validation
+    - [Pinia](https://pinia.vuejs.org/) - Store
+- Docker based on [dunglas/symfony-docker](https://github.com/dunglas/symfony-docker) and updated to handle the frontend
 
-## Type Support for `.vue` Imports in TS
+## Development
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+1. If not already done, [install Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)
+2. Run `docker compose build --no-cache` to build fresh images
+3. Run `SERVER_NAME=martofu.localhost docker compose up -d --wait` to set up the project
+4. Open `https://martofu.localhost/api` to browse the API docs
+5. Open `http://localhost:5173` to access the Vue 3 frontend
+6. Run `docker compose down --remove-orphans` to stop the Docker containers.
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+The frontend is located under the `/assets/vue` folder. 
