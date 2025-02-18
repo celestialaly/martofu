@@ -22,3 +22,10 @@ Martofu makes your Dofus sales easier to follow
 6. Run `docker compose down --remove-orphans` to stop the Docker containers.
 
 The frontend is located under the `/assets/vue` folder. 
+
+## Testing
+
+Testing the API is done with PHPUnit:
+```sh
+docker compose exec php bin/phpunit
+```
