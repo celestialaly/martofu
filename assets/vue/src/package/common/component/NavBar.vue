@@ -21,12 +21,6 @@ const items = ref([
         command: () => {
             router.push('/sales');
         }
-    }, {
-        label: 'About',
-        icon: 'pi pi-star',
-        command: () => {
-            router.push('/about');
-        }
     },
 ])
 </script>
