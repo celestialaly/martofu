@@ -2,3 +2,7 @@
 
 @import 'primeflex/primeflex.scss';
 @import 'primeflex/themes/primeone-dark.css';
+
+* {
+    font-family: Helvetica;
+}

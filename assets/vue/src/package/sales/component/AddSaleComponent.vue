@@ -7,9 +7,13 @@ import { Sale } from '../domain/Sale';
 import CommandSaleController from '../infrastructure/command/CommandSaleController';
 import type { Item } from "../domain/Item";
 import { useToastStore } from "@/package/common/stores/toastStore";
+import CalculateInvestment from "./submodals/CalculateInvestment.vue";
+import { SalesEvent } from "../domain/SalesEvent";
 
 const visible = ref(false);
-const emit = defineEmits(['sale:create'])
+const emit = defineEmits<{
+    (e: SalesEvent.REFRESH): void
+}>()
 const commandSaleController = new CommandSaleController();
 
 interface AddSaleForm {
@@ -46,14 +50,17 @@ const submitForm = () => {
     }).catch((err) => {
         console.log(err);
     })
+};
 
+const saveInvestmentPrice = (price: number) => {
+    state.price = price
 };
 
 async function saveSale() {
     const sale = Sale.new(state.selectedItem as Item, state.price, state.sellPrice, state.sold);
     await commandSaleController.save(sale);
     useToastStore().add({ severity: 'success', summary: `Vente ajoutée`, detail: `La vente de votre objet ${sale.item.title} a été ajoutée.`, life: 3000 });
-    emit('sale:create')
+    emit(SalesEvent.REFRESH)
     closeAndResetForm()
 }
 
@@ -86,6 +93,9 @@ const closeAndResetForm = () => {
                         <InputNumber suffix="k" v-model="state.price" :invalid="v$.price.$errors.length > 0" />
                         <label for="price">Investissement</label>
                     </IftaLabel>
+                    <InputGroupAddon>
+                        <CalculateInvestment @sales:save-investment-price="saveInvestmentPrice"></CalculateInvestment>
+                    </InputGroupAddon>
                 </InputGroup>
 
                 <InputGroup class="col">

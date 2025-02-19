@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive } from 'vue';
+import router from '@/router';
 import { useVuelidate } from '@vuelidate/core';
 import { required, email, sameAs } from '@vuelidate/validators';
 import CommandUserController from '../infrastructure/command/CommandUserController';
@@ -53,6 +54,7 @@ const registerUser = async () => {
     await commandUserController.register(user)
     useToastStore().add({ severity: 'success', summary: `Compte créé`, detail: `Votre compte vient d'être créé, bienvenue !`, life: 3000 });
     resetForm()
+    router.push('/auth');
 }
 </script>
 

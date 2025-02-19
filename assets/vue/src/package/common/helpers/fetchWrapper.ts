@@ -1,5 +1,6 @@
 import ApiException from "../api/ApiException";
 import { useAuthStore } from "../stores/authStore";
+import { useToastStore } from "../stores/toastStore";
 
 const createQuery =
     (baseURL: RequestInfo | URL = '', baseInit?: RequestInit) =>
@@ -12,10 +13,11 @@ const createQuery =
                     const { user, logout } = useAuthStore();
                     if ([401, 403].includes(res.status) && user) {
                         // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
+                        useToastStore().add({ severity: 'error', summary: `Déconnecté·e`, detail: 'Vous avez été déconecté·e, merci de vous reconnecter', life: 3000 });
                         logout();
+                    } else {
+                        throw new ApiException(res.status, res.statusText);
                     }
-
-                    throw new ApiException(res.status, res.statusText);
                 }
 
                 return res.json() as Promise<T>

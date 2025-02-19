@@ -1,4 +1,4 @@
-import type { DataTableFilterEvent, DataTableSortEvent } from "primevue"
+import type { DataTableSortEvent } from "primevue"
 
 type PaginatorSearchParameters = {
     page: number,

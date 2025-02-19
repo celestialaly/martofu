@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import QuerySaleController from '../infrastructure/query/QuerySaleController'
 import AddSaleComponent from './AddSaleComponent.vue';
-import DataTable, { type DataTableFilterEvent, type DataTableFilterMeta, type DataTablePageEvent, type DataTableSortEvent } from 'primevue/datatable';
+import DataTable, { type DataTablePageEvent, type DataTableSortEvent } from 'primevue/datatable';
 import { FilterMatchMode } from '@primevue/core/api';
 import Column from 'primevue/column';
 import { computed, onMounted, ref } from 'vue';
@@ -58,7 +58,7 @@ async function onFilter() {
 <template>
   <main>
     <div class="flex flex-row flex-wrap justify-content-end mb-2">
-      <AddSaleComponent @sale:create="refreshSalesData()" />
+      <AddSaleComponent @sales:refresh="refreshSalesData" />
     </div>
 
     <DataTable lazy paginator removableSort :value="sales?.data" :totalRecords :first="offset" :rows="limit"
