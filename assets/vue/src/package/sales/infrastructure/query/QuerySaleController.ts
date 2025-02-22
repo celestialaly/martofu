@@ -13,7 +13,7 @@ export default class QuerySaleController extends ApiController {
     }
 
     async retrieveItems(query?: string): Promise<HydraCollectionResponse<Item>> {
-        const items = await this.getCollection<ItemModel>(`/items?title=${query}`);
+        const items = await this.getCollection<ItemModel>(`/items?slug=${query}`);
 
         return HydraCollectionResponse.from<Item, ItemModel>(items, (model => Item.fromModel(model)));
     }

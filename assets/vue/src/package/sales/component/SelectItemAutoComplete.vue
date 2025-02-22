@@ -16,7 +16,7 @@ const search = (event: AutoCompleteCompleteEvent) => {
         if (!event.query.trim().length) {
             filteredItems.value = [];
         } else {
-            filteredItems.value = await saleController.retrieveItems(event.query.trim()).then((data) => data.data);
+            filteredItems.value = await saleController.retrieveItems(event.query.trim().toLowerCase()).then((data) => data.data);
         }
     }, 250);
 }

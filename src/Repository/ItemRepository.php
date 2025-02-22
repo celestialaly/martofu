@@ -16,7 +16,7 @@ class ItemRepository extends ServiceEntityRepository
         parent::__construct($registry, Item::class);
     }
 
-    public function getAllWithOnlyTitle(): array
+    public function getAllWithTitleOnly(): array
     {
         return $this->createQueryBuilder('i')
             ->select('i.title')

@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
         new GetCollection()
     ]
 )]
-#[ApiFilter(SearchFilter::class, properties: ['title' => 'partial'])]
+#[ApiFilter(SearchFilter::class, properties: ['slug' => 'partial'])]
 class Item
 {
     #[ORM\Id]
@@ -28,6 +28,9 @@ class Item
     #[ORM\Column(length: 255)]
     #[Groups('sale:read')]
     private ?string $title = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $slug = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imgPath = null;
@@ -45,6 +48,18 @@ class Item
     public function setTitle(string $title): static
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): static
+    {
+        $this->slug = $slug;
 
         return $this;
     }
