@@ -18,6 +18,7 @@
     "@primevue/themes": "^4.2.5",
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
+    "@vueuse/core": "^12.7.0",
     "bootstrap": "^5.3.3",
     "bootstrap-vue-next": "^0.26.19",
     "pinia": "^2.3.0",

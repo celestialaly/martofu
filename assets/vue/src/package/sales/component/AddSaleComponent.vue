@@ -74,7 +74,7 @@ const closeAndResetForm = () => {
 <template>
     <Button label="Ajouter une vente" @click="visible = true" />
 
-    <Dialog v-model:visible="visible" modal header="Ajouter une vente" style="width: 50%;">
+    <Dialog v-model:visible="visible" modal header="Ajouter une vente" class="w-11 lg:w-7">
         <form @submit.prevent="submitForm">
             <div class="grid mt-0.5">
                 <InputGroup class="col-12">

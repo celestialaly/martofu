@@ -15,6 +15,11 @@ const chatlog = ref('');
 const craftInvestment = ref(0);
 const runeInvestment = ref(0);
 const totalInvestment = ref(0);
+const chatlogPlaceholder = "Exemple: \n \
+1 x [Poing-virgule de Shinlam] (14 995 kamas)\n \
+1 x [Poing-virgule de Shinlam] (14 995 kamas)\n \
+1 x [Carapace circonflexe de Rokoram] (26 494 kamas)\n \
+1 x [Carapace circonflexe de Rokoram] (26 494 kamas)";
 
 const calculateTotal = () => {
     const re = /\] \(([\d\s\xa0]+)/g;
@@ -50,17 +55,17 @@ const submitForm = () => {
 <template>
     <Button icon="pi pi-calculator" severity="contrast" variant="text" @click="visible = true" />
 
-    <Dialog v-model:visible="visible" modal header="Calcul de l'investissement" style="width: 60%;">
+    <Dialog v-model:visible="visible" modal header="Calcul de l'investissement" class="w-11 lg:w-8">
         <form @submit.prevent="submitForm">
             <div class="grid">
-                <div class="col-6">
+                <div class="col-12 lg:col-6">
                     <IftaLabel>
-                        <Textarea id="chatlog" v-model="chatlog" rows="14" class="w-full" @input="calculateTotal" />
+                        <Textarea id="chatlog" v-model="chatlog" rows="14" class="w-full" @input="calculateTotal" :placeholder="chatlogPlaceholder" />
                         <label for="chatlog">Données de votre chat</label>
                     </IftaLabel>
                 </div>
 
-                <div class="col-6">
+                <div class="hidden lg:block lg:col-6">
                     <p class="mt-0">Vous pouvez copier/coller les achats faits à l'HDV pour calculer automatiquement la
                         somme dépensée :</p>
                     <img src="@/assets/images/investment_chatlog.png" alt="Chat Log" class=" border-1" />

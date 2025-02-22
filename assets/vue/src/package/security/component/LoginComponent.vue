@@ -56,7 +56,7 @@ const loginUser = async () => {
 <template>
     <Suspense>
         <form @submit.prevent="submitForm">
-            <Card style="width: 65rem; margin: auto; margin-top: 15px;">
+            <Card class="m-auto mt-2 lg:w-9">
                 <template #title>Connexion</template>
                 <template #content>
                     <div class="flex flex-column gap-2 mt-0.5">

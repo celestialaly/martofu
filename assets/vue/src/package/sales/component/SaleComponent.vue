@@ -11,6 +11,7 @@ import RefreshPricePopoverComponent from './popover/RefreshPricePopoverComponent
 import MarkAsSoldPopoverComponent from './popover/MarkAsSoldPopoverComponent.vue';
 import UndoSaleConfirmComponent from './popover/UndoSaleConfirmComponent.vue';
 import { ApiPaginator } from '@/package/common/api/ApiPaginator';
+import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 
 const queryController = new QuerySaleController()
 const salePriceRefreshRef = ref<InstanceType<typeof RefreshPricePopoverComponent>>()
@@ -27,6 +28,11 @@ const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 const paginator = new ApiPaginator()
+
+// display columns on specific breakpoints
+const breakpoints = useBreakpoints(breakpointsTailwind);
+const smAndLarger = breakpoints.greaterOrEqual("sm");
+const onlyLg = breakpoints.greaterOrEqual("lg");
 
 onMounted(() => {
   refreshSalesData()
@@ -70,14 +76,14 @@ async function onFilter() {
             <InputIcon>
               <i class="pi pi-search" />
             </InputIcon>
-            <InputText v-model="filters['global'].value" placeholder="Rechercher par équipement" @input="onFilter" />
+            <InputText v-model="filters['global'].value" placeholder="Rechercher par objet" @input="onFilter" />
           </IconField>
         </div>
       </template>
       <template #empty>Aucune vente listée.</template>
       <template #loading>Récupération des données en cours...</template>
 
-      <Column header="Equipement" field="item.title" sortable>
+      <Column header="Objet" field="item.title" sortable>
         <template #body="slotProps">
           <div class="flex gap-2">
             <div class="table-indicator" :class="[slotProps.data.sold ? 'bg-green-600' : 'bg-red-600']">
@@ -91,22 +97,22 @@ async function onFilter() {
           {{ (slotProps.data.sellPrice - slotProps.data.price - slotProps.data.taxPrice).toLocaleString() }}k
         </template>
       </Column>
-      <Column header="Investissement" field="price" sortable>
+      <Column header="Investissement" field="price" sortable  v-if="smAndLarger">
         <template #body="slotProps">
           {{ slotProps.data.price.toLocaleString() }}k
         </template>
       </Column>
-      <Column header="Prix de vente" field="sellPrice" sortable>
+      <Column header="Prix de vente" field="sellPrice" sortable  v-if="smAndLarger">
         <template #body="slotProps">
           {{ slotProps.data.sellPrice.toLocaleString() }}k
         </template>
       </Column>
-      <Column header="Taxe HDV (cumulé)" field="taxPrice" sortable>
+      <Column header="Taxe HDV (cumulé)" field="taxPrice" sortable v-if="onlyLg">
         <template #body="slotProps">
           {{ slotProps.data.taxPrice.toLocaleString() }}k
         </template>
       </Column>
-      <Column header="Vendu ?" field="sold" sortable>
+      <Column header="Vendu ?" field="sold" sortable v-if="onlyLg">
         <template #body="slotProps">
           {{ slotProps.data.sold ? 'Oui' : 'Non' }}
         </template>

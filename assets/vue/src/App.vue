@@ -14,7 +14,7 @@ useToastStore()
 
   <div class="footer mt-auto mb-3">
     <div class="m-0 mt-4 p-0 border-top-1 border-100">&nbsp;</div>
-    <div class="flex px-4">
+    <div class="flex px-4 gap-4">
       <div class="flex align-items-center gap-3">
         <div><strong>Autres outils</strong></div>
         <div><a href="https://dofusdb.fr/fr/" title="DofusDB"><img src="@/assets/favicons/dofusdb.png" style="width: 24px;"></a></div>

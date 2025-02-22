@@ -2,7 +2,7 @@
 import { computed, reactive } from 'vue';
 import router from '@/router';
 import { useVuelidate } from '@vuelidate/core';
-import { required, email, sameAs } from '@vuelidate/validators';
+import { required, email, minLength, sameAs } from '@vuelidate/validators';
 import CommandUserController from '../infrastructure/command/CommandUserController';
 import User from '../domain/User';
 import { useToastStore } from '@/package/common/stores/toastStore';
@@ -24,7 +24,7 @@ const state = reactive({ ...initialState })
 const rules = computed(() => (
     {
         email: { required, email },
-        password: { required },
+        password: { required, minLength: minLength(8) },
         repeatedPassword: { required, sameAsRef: sameAs(state.password) },
     }
 ));
@@ -52,16 +52,16 @@ const resetForm = () => {
 const registerUser = async () => {
     const user = User.new(state.email, state.password)
     await commandUserController.register(user)
-    useToastStore().add({ severity: 'success', summary: `Compte créé`, detail: `Votre compte vient d'être créé, bienvenue !`, life: 3000 });
+    useToastStore().add({ severity: 'success', summary: `Compte créé`, detail: `Votre compte vient d'être créé, bienvenue ! Connectez-vous pour accéder aux fonctionnalités.`, life: 3000 });
     resetForm()
-    router.push('/auth');
+    router.push({path: '/auth'});
 }
 </script>
 
 <template>
     <Suspense>
         <form @submit.prevent="submitForm">
-            <Card style="width: 65rem; margin: auto; margin-top: 15px;">
+            <Card class="m-auto mt-2 lg:w-9">
                 <template #title>Créer mon compte</template>
                 <template #content>
                     <div class="flex flex-column gap-2 mt-0.5">
@@ -85,6 +85,10 @@ const registerUser = async () => {
                                 <label for="password">Mot de passe</label>
                             </IftaLabel>
                         </InputGroup>
+                        <div v-if="v$.password.$errors.length > 0">
+                            <Message v-for="error of v$.password.$errors" v-bind:key="error.$uid" size="small"
+                                severity="error" variant="simple">{{ error.$message }}</Message>
+                        </div>
 
                         <InputGroup>
                             <InputGroupAddon>
