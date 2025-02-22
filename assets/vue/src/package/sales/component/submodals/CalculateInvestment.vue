@@ -17,13 +17,13 @@ const runeInvestment = ref(0);
 const totalInvestment = ref(0);
 
 const calculateTotal = () => {
-    const re = /\] \(([\d\s]+)/g;
+    const re = /\] \(([\d\s\xa0]+)/g;
     let price = 0;
     let lastMatch;
 
     while (lastMatch = re.exec(chatlog.value)) {
         if (lastMatch[1]) {
-            price += parseInt(lastMatch[1].replace(/ /g, ''))
+            price += parseInt(lastMatch[1].replace(/[\s\xa0]+/g, ''))
         }
 
         // Avoid infinite loop
