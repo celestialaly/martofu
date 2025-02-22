@@ -6,3 +6,15 @@
 * {
     font-family: Helvetica;
 }
+
+body {
+    margin: 0;
+}
+
+#app {
+    min-height: 100svh;
+}
+
+header, #main {
+    margin: 8px;
+}
