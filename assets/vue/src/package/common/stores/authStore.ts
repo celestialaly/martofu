@@ -21,13 +21,13 @@ export const useAuthStore = defineStore('auth', {
             localStorage.setItem('user', JSON.stringify(this.user));
 
             // redirect to previous url or default to home page
-            router.push(this.returnUrl || '/');
+            router.push(this.returnUrl && this.returnUrl !== '/auth' ? this.returnUrl : '/sales');
         },
         logout() {
             console.log('logout')
             this.user = null;
             localStorage.removeItem('user');
-            router.push('/login');
+            router.push('/auth');
         }
     }
 });
