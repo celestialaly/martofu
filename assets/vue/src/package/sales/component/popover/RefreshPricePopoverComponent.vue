@@ -36,7 +36,7 @@ const hidePopover = () => {
 }
 
 const updateSaleTax = (event: InputNumberInputEvent) => {
-    saleTax.value = event.value as number * UPDATE_SALE_TAX_PRICE
+    saleTax.value = Math.round(event.value as number * UPDATE_SALE_TAX_PRICE)
 }
 
 const refreshSalePrice = async () => {

@@ -41,7 +41,7 @@ export class Sale {
     }
 
     refreshTaxPrice() {
-        this.taxPrice += this.sellPrice * UPDATE_SALE_TAX_PRICE;
+        this.taxPrice += Math.round(this.sellPrice * UPDATE_SALE_TAX_PRICE);
     }
 
     updateSellPrice(sellPrice: number, refreshTaxPrice: boolean = true) {

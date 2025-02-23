@@ -39,7 +39,7 @@ const hidePopover = () => {
 const updateSaleTax = () => {
     saleTax.value = (soldOutsideMarket.value || selectedSale.value?.sellPrice == saleFinalPrice.value)
         ? 0
-        : saleFinalPrice.value * UPDATE_SALE_TAX_PRICE
+        : Math.round(saleFinalPrice.value * UPDATE_SALE_TAX_PRICE)
 }
 
 const markAsSold = async () => {
