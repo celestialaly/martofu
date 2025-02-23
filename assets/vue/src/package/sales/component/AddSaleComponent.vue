@@ -52,6 +52,14 @@ const submitForm = () => {
     })
 };
 
+const duplicateSale = (sale: Sale) => {
+    state.selectedItem = sale.item
+    state.price = sale.price
+    state.sellPrice = sale.sellPrice
+
+    visible.value = true
+};
+
 const saveInvestmentPrice = (price: number) => {
     state.price = price
 };
@@ -69,6 +77,10 @@ const closeAndResetForm = () => {
     Object.assign(state, initialState);
     v$.value.$reset()
 }
+
+defineExpose({
+    duplicateSale
+})
 </script>
 
 <template>

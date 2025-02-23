@@ -14,6 +14,7 @@ import { ApiPaginator } from '@/package/common/api/ApiPaginator';
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 
 const queryController = new QuerySaleController()
+const createSaleRef = ref<InstanceType<typeof AddSaleComponent>>()
 const salePriceRefreshRef = ref<InstanceType<typeof RefreshPricePopoverComponent>>()
 const markAsSoldRef = ref<InstanceType<typeof MarkAsSoldPopoverComponent>>()
 
@@ -64,7 +65,7 @@ async function onFilter() {
 <template>
   <main>
     <div class="flex flex-row flex-wrap justify-content-end mb-2">
-      <AddSaleComponent @sales:refresh="refreshSalesData" />
+      <AddSaleComponent ref="createSaleRef" @sales:refresh="refreshSalesData" />
     </div>
 
     <DataTable lazy paginator removableSort :value="sales?.data" :totalRecords :first="offset" :rows="limit"
@@ -97,12 +98,12 @@ async function onFilter() {
           {{ (slotProps.data.sellPrice - slotProps.data.price - slotProps.data.taxPrice).toLocaleString() }}k
         </template>
       </Column>
-      <Column header="Investissement" field="price" sortable  v-if="smAndLarger">
+      <Column header="Investissement" field="price" sortable v-if="smAndLarger">
         <template #body="slotProps">
           {{ slotProps.data.price.toLocaleString() }}k
         </template>
       </Column>
-      <Column header="Prix de vente" field="sellPrice" sortable  v-if="smAndLarger">
+      <Column header="Prix de vente" field="sellPrice" sortable v-if="smAndLarger">
         <template #body="slotProps">
           {{ slotProps.data.sellPrice.toLocaleString() }}k
         </template>
@@ -119,15 +120,21 @@ async function onFilter() {
       </Column>
       <Column header="Actions">
         <template #body="slotProps">
-          <div class="flex gap-2" v-if="slotProps.data.sold">
-            <UndoSaleConfirmComponent :sale="slotProps.data" />
-          </div>
-          <div class="flex gap-2" v-else>
-            <Button severity="secondary" size="small" icon="pi pi-tag" v-tooltip.top="'Mettre à jour le prix de vente'"
-              @click="salePriceRefreshRef?.displayPopover($event, slotProps.data)" />
+          <div class="flex gap-2">
+            <template v-if="slotProps.data.sold">
+              <UndoSaleConfirmComponent :sale="slotProps.data" />
+            </template>
+            <template v-else>
+              <Button severity="secondary" size="small" icon="pi pi-tag"
+                v-tooltip.top="'Mettre à jour le prix de vente'"
+                @click="salePriceRefreshRef?.displayPopover($event, slotProps.data)" />
 
-            <Button size="small" icon="pi pi-check" v-tooltip.top="'Marquer comme vendu'"
-              @click="markAsSoldRef?.displayPopover($event, slotProps.data)" />
+              <Button size="small" icon="pi pi-check" v-tooltip.top="'Marquer comme vendu'"
+                @click="markAsSoldRef?.displayPopover($event, slotProps.data)" />
+            </template>
+
+            <Button severity="secondary" size="small" icon="pi pi-clone" v-tooltip.top="'Dupliquer la vente'"
+              @click="createSaleRef?.duplicateSale(slotProps.data)" />
           </div>
         </template>
       </Column>
