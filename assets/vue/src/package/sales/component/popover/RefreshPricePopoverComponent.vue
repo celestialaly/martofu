@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, nextTick } from 'vue';
 import CommandSaleController from '../../infrastructure/command/CommandSaleController';
-import { SALE_TAX_PRICE, type Sale } from '../../domain/Sale';
+import { UPDATE_SALE_TAX_PRICE, type Sale } from '../../domain/Sale';
 import { useToastStore } from '@/package/common/stores/toastStore';
 import { SalesEvent } from '../../domain/SalesEvent';
 import { type InputNumberInputEvent } from 'primevue';
@@ -9,6 +9,7 @@ import { type InputNumberInputEvent } from 'primevue';
 const popover = ref()
 const selectedSale = ref<Sale | null>();
 const commandController = new CommandSaleController()
+const newPrice = ref(0)
 const saleTax = ref(0)
 
 const emit = defineEmits<{
@@ -20,9 +21,10 @@ const displayPopover = (event: Event, sale: Sale) => {
 
     if (selectedSale.value?.saleId === sale.saleId) {
         selectedSale.value = null;
+        newPrice.value = 0;
     } else {
         selectedSale.value = sale.clone();
-        saleTax.value = sale.sellPrice * SALE_TAX_PRICE
+        newPrice.value = selectedSale.value.sellPrice
 
         nextTick(() => {
             popover.value.show(event);
@@ -34,19 +36,29 @@ const hidePopover = () => {
 }
 
 const updateSaleTax = (event: InputNumberInputEvent) => {
-    saleTax.value = event.value as number * SALE_TAX_PRICE
+    saleTax.value = event.value as number * UPDATE_SALE_TAX_PRICE
 }
 
 const refreshSalePrice = async () => {
     if (!selectedSale.value) return
 
-    selectedSale.value.refreshTaxPrice();
-    await commandController.update(selectedSale.value)
-    
-    useToastStore().add({ severity: 'success', summary: `Prix mis à jour`, detail: `Le prix a bien été mis à jour.`, life: 3000 });
-    emit(SalesEvent.REFRESH)
+    if (newPrice.value !== selectedSale.value.sellPrice) {
+        selectedSale.value.refreshTaxPrice();
+        await commandController.update(selectedSale.value)
+        useToastStore().add({ severity: 'success', summary: `Prix mis à jour`, detail: `Le prix a bien été mis à jour.`, life: 3000 });
+        emit(SalesEvent.REFRESH)
+    } else {
+        useToastStore().add({
+            severity: 'warn',
+            summary: `Prix non modifié`,
+            detail: `Le prix saisi est déjà celui défini pour cette vente (${newPrice.value.toLocaleString()}k).`,
+            life: 6000
+        });
+    }
+
 
     hidePopover()
+    newPrice.value = 0
     selectedSale.value = null
 }
 
@@ -68,7 +80,7 @@ defineExpose({
                 </IftaLabel>
             </InputGroup>
 
-            <Message size="small" severity="secondary" variant="simple">Taxe HDV : {{ saleTax.toLocaleString() }}k
+            <Message size="small" severity="secondary" variant="simple">Taxe HDV (1%) : {{ saleTax.toLocaleString() }}k
             </Message>
 
 

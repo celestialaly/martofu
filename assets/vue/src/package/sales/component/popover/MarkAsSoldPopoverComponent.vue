@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, nextTick } from 'vue';
 import CommandSaleController from '../../infrastructure/command/CommandSaleController';
-import { SALE_TAX_PRICE, type Sale } from '../../domain/Sale';
+import { UPDATE_SALE_TAX_PRICE, type Sale } from '../../domain/Sale';
 import { useToastStore } from '@/package/common/stores/toastStore';
 import { SalesEvent } from '../../domain/SalesEvent';
 
@@ -39,7 +39,7 @@ const hidePopover = () => {
 const updateSaleTax = () => {
     saleTax.value = (soldOutsideMarket.value || selectedSale.value?.sellPrice == saleFinalPrice.value)
         ? 0
-        : saleFinalPrice.value * SALE_TAX_PRICE
+        : saleFinalPrice.value * UPDATE_SALE_TAX_PRICE
 }
 
 const markAsSold = async () => {
@@ -75,7 +75,7 @@ defineExpose({
             </InputGroup>
 
             <Message size="small" severity="secondary" variant="simple" v-if="saleTax > 0">
-                Taxe HDV additionnelle : {{ saleTax.toLocaleString() }}k
+                Taxe HDV additionnelle (1%) : {{ saleTax.toLocaleString() }}k
             </Message>
 
             <div class="flex items-center gap-2">
