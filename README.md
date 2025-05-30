@@ -1,6 +1,6 @@
 # Martofu
 
-Martofu makes your Dofus sales easier to follow
+Martofu helps you manage your Dofus sales with a clean UX/UI interface
 
 ## Stack
 
@@ -14,12 +14,20 @@ Martofu makes your Dofus sales easier to follow
 
 ## Development
 
+### Installation
 1. If not already done, [install Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)
 2. Run `docker compose build --no-cache` to build fresh images
 3. Run `SERVER_NAME=martofu.localhost docker compose up -d --wait` to set up the project
-4. Open `https://martofu.localhost/api` to browse the API docs
-5. Open `http://localhost:5173` to access the Vue 3 frontend
-6. Run `docker compose down --remove-orphans` to stop the Docker containers.
+4. Run `docker compose down --remove-orphans` to stop the Docker containers.
+
+### Configuration
+1. Generate JWT keys with `docker compose exec php php bin/console lexik:jwt:generate-keypair`
+2. Set the API URL (see below) in `assets/vue/.env` env file
+
+### Navigate
+1. Open `https://martofu.localhost/api` to browse the API docs
+2. Open `http://localhost:5173` to access the Vue 3 frontend
+
 
 The frontend is located under the `/assets/vue` folder. 
 
